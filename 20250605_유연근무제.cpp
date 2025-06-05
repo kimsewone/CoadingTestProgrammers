@@ -1,17 +1,49 @@
-//URL : https://school.programmers.co.kr/learn/courses/30/lessons/1845
+//URL : https://school.programmers.co.kr/learn/courses/30/lessons/388351
 
-#include <vector>
-#include <unordered_set>
-using namespace std;
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
-int solution(vector<int> nums)
-{
-    // 1️⃣ 폰켓몬 종류 개수 세기 (중복 제거)
-    unordered_set<int> kinds(nums.begin(), nums.end());
 
-    // 2️⃣ 고를 수 있는 최대 개수 (N/2)
-    int maxPick = nums.size() / 2;
+int add10min(int time) {
+    int hour = time / 100;
+    int min = time % 100;
+    min += 10;
+    if (min >= 60) {
+        hour += 1;
+        min -= 60;
+    }
+    return hour * 100 + min;
+}
 
-    // 3️⃣ 최대한 다양한 종류를 고르려면, 종류 개수와 maxPick 중 작은 값
-    return min((int)kinds.size(), maxPick);
+
+int getDay(int startday, int offset) {
+    return ((startday - 1 + offset) % 7) + 1;
+}
+
+
+int solution(int schedules[], size_t schedules_len, int** timelogs, size_t timelogs_rows, size_t timelogs_cols, int startday) {
+    int answer = 0;
+
+    for (int i = 0; i < schedules_len; i++) {
+        int limit = add10min(schedules[i]);
+        bool onTimeAllWeek = true;
+
+        for (int j = 0; j < 7; j++) {
+            int day = getDay(startday, j);
+
+            
+            if (day == 6 || day == 7) continue;
+
+            int arrive = timelogs[i][j];
+            if (arrive > limit) {
+                onTimeAllWeek = false;
+                break; 
+            }
+        }
+
+        if (onTimeAllWeek) answer++;
+    }
+
+    return answer;
 }
